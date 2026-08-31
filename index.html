@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise Gym Management</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px; background-color: #111; color: white;">
+
+    <h1 style="color: #ff6f00;">SUNRISE GYM 🏋️‍♂️</h1>
+    <p style="color: #ccc; margin-bottom: 20px;">Members Fees Aur Record Management Portal</p>
+
+    <!-- 1. GYM INFO -->
+    <div style="background-color: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; text-align: left;">
+        <p style="margin-bottom: 5px;">📞 <strong>Mobile:</strong> <span id="display-phone">9876543210</span></p>
+        <p style="margin-bottom: 5px;">⏰ <strong>Timing:</strong> <span id="display-time">06:00 AM - 10:00 PM</span></p>
+        <p>📍 <strong>Location:</strong> Near Main Market, Kota, Rajasthan</p>
+    </div>
+
+    <!-- 2. OWNER PANEL -->
+    <div style="background-color: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px dashed #ff6f00; margin-bottom: 25px; text-align: left;">
+        <h3 style="color: #ff6f00; font-size: 16px; margin-bottom: 10px;">⚙️ Gym Owner Settings Panel</h3>
+        <label style="font-size: 12px; color: #ccc;">Naya Mobile No:</label>
+        <input type="tel" id="input-phone" placeholder="Naya number likhein" style="width: 100%; padding: 8px; margin-bottom: 10px; background:#333; color:white; border:1px solid #444; border-radius:4px;">
+        <label style="font-size: 12px; color: #ccc;">Naya Gym Timing:</label>
+        <input type="text" id="input-time" placeholder="Jaise: 05:00 AM - 09:00 PM" style="width: 100%; padding: 8px; margin-bottom: 10px; background:#333; color:white; border:1px solid #444; border-radius:4px;">
+        <button type="button" onclick="updateGymInfo()" style="background-color: #ff6f00; color: white; width: 100%; padding: 8px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Details Update Karein</button>
+    </div>
+
+    <!-- 3. DIET DROPDOWNS -->
+    <h2 style="font-size: 20px; margin-top: 20px;">View Gym Diet Plans 🍏</h2>
+    
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+        <button onclick="toggleDiet('gain-box')" style="width: 100%; background-color: #222; color: #ff6f00; border: 1px solid #ff6f00; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: left; display: flex; justify-content: space-between;">
+            <span>💪 Weight Gain Diet Plan</span> <span>▼</span>
+        </button>
+        <div id="gain-box" style="display: none; background-color: #1a1a1a; padding: 15px; border-radius: 0 0 5px 5px; border: 1px solid #333; border-top: none; text-align: left; color: #ccc; line-height: 1.6; font-size: 14px;">
+            🌅 <strong>Breakfast (08:00 AM):</strong> 4 Eggs + 2 Bananas + Oats Shake<br>
+            ☀️ <strong>Lunch (01:00 PM):</strong> Rice + Paneer/Chicken + Dal<br>
+            🏋️‍♂️ <strong>Pre-Workout:</strong> 2 Boiled Potatoes + Black Coffee<br>
+            🌙 <strong>Dinner (08:30 PM):</strong> Roti + Mix Veg + Paneer + Milk
+        </div>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+        <button onclick="toggleDiet('loss-box')" style="width: 100%; background-color: #222; color: #ff6f00; border: 1px solid #ff6f00; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: left; display: flex; justify-content: space-between;">
+            <span>🏃‍♂️ Weight Loss Diet Plan</span> <span>▼</span>
+        </button>
+        <div id="loss-box" style="display: none; background-color: #1a1a1a; padding: 15px; border-radius: 0 0 5px 5px; border: 1px solid #333; border-top: none; text-align: left; color: #ccc; line-height: 1.6; font-size: 14px;">
+            🌅 <strong>Breakfast (08:00 AM):</strong> Sprouts + Green Tea + 2 Egg Whites<br>
+            ☀️ <strong>Lunch (01:00 PM):</strong> 1 Roti + Sabzi + 1 Bowl Dahi<br>
+            🏋️‍♂️ <strong>Pre-Workout:</strong> 1 Apple + Green Tea<br>
+            🌙 <strong>Dinner (08:30 PM):</strong> Soya Chunks/Boiled Chicken + Soup
+        </div>
+    </div>
+
+    <!-- 4. FEES TABLE -->
+    <h2 style="font-size: 20px; margin-top: 10px;">Members Fees Status 📊</h2>
+    <table border="1" style="width:100%; margin-top:15px; border-collapse: collapse; text-align:left; background-color: #222; border-color: #333;">
+        <tr style="background-color: #ff6f00; color: white;">
+            <th style="padding: 12px;">Name</th>
+            <th style="padding: 12px;">Total</th>
+            <th style="padding: 12px;">Paid</th>
+            <th style="padding: 12px;">Baki Fees</th>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">Raman Kumar</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹1000</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹1000</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333; color: #4caf50; font-weight: bold;">₹0 (Clear)</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">Amit Sharma</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹1000</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹400</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333; color: #f44336; font-weight: bold;">₹600 Baki ❌</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">Rajat Kumar</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹1000</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333;">₹500</td>
+            <td style="padding: 12px; border-bottom: 1px solid #333; color: #f44336; font-weight: bold;">₹500 Baki ❌</td>
+        </tr>
+    </table>
+
+    <!-- 5. GALLERY -->
+    <h2 style="font-size: 20px; margin-top: 30px; margin-bottom: 10px;">Gym Gallery 📸</h2>
+    <div style="text-align: center; margin-top: 10px;">
+        <img src="gym1.jpg" alt="Gym Area" style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #ff6f00; margin-bottom: 15px;">
+        <img src="gym2.jpg" alt="Machines Area" style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #ff6f00; margin-bottom: 15px;">
+        <img src="gym3.jpg" alt="Cardio Area" style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #ff6f00; margin-bottom: 15px;">
+        <img src="gym4.jpg" alt="Weights Area" style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #ff6f00; margin-bottom: 15px;">
+        <img src="gym5.jpg" alt="Zumba Area" style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #ff6f00; margin-bottom: 15px;">
+    </div>
+
+    <!-- 6. ADMISSION FORM -->
+    <h2 style="font-size: 20px; margin-top: 30px; margin-bottom: 10px;">New Online Admission Form 📝</h2>
+    <form id="admission-form" style="background-color: #222; padding: 20px; border-radius: 8px; border: 1px solid #333; text-align: left;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #ff6f00;">Full Name:</label>
+        <input type="text" id="form-name" required placeholder="Apna Poora Naam Likhein" style="width: 100%; padding: 10px; margin-bottom: 15px; background-color: #333; border: 1px solid #444; color: white; border-radius: 5px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #ff6f00;">Mobile Number:</label>
+        <input type="tel" id="form-phone" required placeholder="Apna Phone Number Daalein" style="width: 100%; padding: 10px; margin-bottom: 15px; background-color: #333; border: 1px solid #444; color: white; border-radius: 5px;">
+        <button type="button" onclick="submitAdmission()" style="background-color: #4caf50; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">Submit Admission</button>
+    </form>
+
+    <!-- 7. REGISTRATIONS LIST -->
+    <h2 style="font-size: 20px; margin-top: 30px; color: #ff6f00;">📥 New Registrations (Owner Dashboard)</h2>
+    <div id="records-list" style="background-color: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-top: 10px; text-align: left; margin-bottom: 25px;">
+        <p style="color: #aaa; font-style: italic;">Abhi koi naya admission nahi aaya hai.</p>
+    </div>
+
+    <!-- 8. QR CODE & MAP -->
+    <h2 style="font-size: 20px; margin-top: 30px; margin-bottom: 10px;">Pay Fees & Location 📍</h2>
+    <div style="background-color: #222; padding: 20px; border-radius: 8px; border: 1px solid #333; text-align: center;">
+        <p style="color: #ff6f00; font-weight: bold; margin-bottom: 10px;">Scan QR to Pay Fees via PhonePe/GPay</p>
+        <img src="https://picsum.photos" alt="Payment QR Code" style="width: 180px; border: 5px solid white; border-radius: 5px; margin-bottom: 20px;">
+        <p style="color: #ff6f00; font-weight: bold; margin-bottom: 10px;">Gym Google Map Location</p>
+        <div style="background-color: #333; padding: 15px; border-radius: 5px; color: #ccc;">
+            🗺️ <a href="https://google.com" target="_blank" style="color: #4caf50; font-weight: bold; text-decoration: none;">Click Here To Open Google Maps Location</a>
+        </div>
+    </div>
+
+    <!-- 9. JAVASCRIPT SYSTEM LOGIC -->
+    <script>
+        window.onload = function() {
+            if(localStorage.getItem("gymPhone")) {
+                document.getElementById("display-phone").innerText = localStorage.getItem("gymPhone");
+            }
+            if(localStorage.getItem("gymTime")) {
+                document.getElementById("display-time").innerText = localStorage.getItem("gymTime");
+            }
+            showSavedAdmissions();
+        }
+
+        function updateGymInfo() {
+            var newPhone = document.getElementById("input-phone").value;
+            var newTime = document.getElementById("input-time").value;
+            if(newPhone !== "") {
+                document.getElementById("display-phone").innerText = newPhone;
+                localStorage.setItem("gymPhone", newPhone);
+            }
+            if(newTime !== "") {
+                document.getElementById("display-time").innerText = newTime;
+      
