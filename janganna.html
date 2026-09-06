@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janganna Data Collection Portal</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f0f4f8; padding: 15px; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        header { background: #1a365d; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .hidden { display: none; }
+
+        h2 { margin-bottom: 15px; color: #2d3748; font-size: 18px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; font-size: 15px; }
+        
+        button { background: #3182ce; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 5px; }
+        button:hover { background: #2b6cb0; }
+        .error { color: #e53e3e; font-size: 13px; margin-top: 5px; display: none; }
+        
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; font-size: 14px; vertical-align: middle; }
+        th { background-color: #edf2f7; color: #2d3748; }
+        .user-photo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #cbd5e0; }
+        .doc-photo { width: 50px; height: 35px; border-radius: 3px; object-fit: cover; border: 1px solid #cbd5e0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🇮🇳 Bharat Janganna Portal</h1>
+        <p>E-Mitra Data Entry & Records</p>
+    </header>
+
+    <!-- Step 1: Agent Verification Section -->
+    <div id="loginCard" class="card">
+        <h2>Agent Verification</h2>
+        <div class="form-group">
+            <label>Agent / E-Mitra ID</label>
+            <input type="text" id="agentId" placeholder="Enter Agent ID (e.g. Rajat@1234)">
+            <div id="agentIdError" class="error">Galat Agent ID! Kripya sahi Authorized ID (Rajat@1234) dalei.</div>
+        </div>
+        <div class="form-group">
+            <label>Aadhaar Number</label>
+            <input type="text" id="identityInput" maxlength="12" placeholder="Enter 12-digit Aadhaar Number">
+            <div id="aadhaarError" class="error">Galat ya un-verified Aadhaar Number!</div>
+        </div>
+        <div class="form-group">
+            <label>Registered Mobile Number</label>
+            <input type="text" id="mobileInput" maxlength="10" placeholder="Enter 10-digit Mobile Number">
+            <div id="mobileError" class="error">Kripya sahi 10-digit Mobile Number dalei!</div>
+        </div>
+        <button id="sendOtpBtn" onclick="requestOTP()">Send OTP on Mobile</button>
+
+        <div id="otpSection" class="hidden" style="margin-top: 15px;">
+            <div class="form-group">
+                <label>Enter 4-Digit Demo OTP (Use: 1234)</label>
+                <input type="text" id="otpInput" maxlength="4" placeholder="Enter OTP">
+                <div id="otpError" class="error">Galat OTP! Sahi OTP 1234 hai.</div>
+            </div>
+            <button onclick="verifyOTP()">Verify OTP & Login</button>
+        </div>
+    </div>
+
+    <!-- Step 2: Data Entry Form -->
+    <div id="censusFormCard" class="card hidden">
+        <h2>Parivar Ka Census Data Bharein</h2>
+        <form id="censusForm" onsubmit="submitCensusData(event)">
+            <!-- Photos First Section -->
+            <div class="form-group">
+                <label>1. Mukhia Ki Photo Upload Karein *</label>
+                <input type="file" id="headPhoto" accept="image/*" required>
+                <div id="photoError" class="error">Yeh Mukhia Photo pehle se uploaded hai!</div>
+            </div>
+            <div class="form-group">
+                <label>2. Aadhaar Card Front Photo Upload Karein *</label>
+                <input type="file" id="aadhaarPhoto" accept="image/*" required>
+                <div id="aadhaarPhotoError" class="error">Yeh Aadhaar Photo pehle se uploaded hai!</div>
+            </div>
+
+            <!-- Other Details Section -->
+            <div class="form-group">
+                <label>3. Mukhia Ka Naam (Head of Family) *</label>
+                <input type="text" id="headName" required placeholder="Poora Naam">
+            </div>
+            <div class="form-group">
+                <label>4. Aadhaar Number (Card se dekh kar likhein) *</label>
+                <input type="text" id="memberAadhaar" maxlength="12" placeholder="12-digit Aadhaar Number" required>
+            </div>
+            <div class="form-group">
+                <label>5. Kul Sadasya (Total Members) *</label>
+                <input type="number" id="memberCount" required min="1" placeholder="Jaise: 4">
+            </div>
+            <div class="form-group">
+                <label>6. Rajya (State) *</label>
+                <select id="stateSelect" required onchange="updateDistricts()">
+                    <option value="">State Chunein</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>7. Zila (District) *</label>
+                <select id="districtSelect" required>
+                    <option value="">Pehle State Chunein</option>
+                </select>
+            </div>
+            <button type="submit">Submit Entry</button>
+        </form>
+    </div>
+
+    <!-- Step 3: Data Table -->
+    <div id="dataListCard" class="card hidden">
+        <h2>Submit Kiya Hua Data (Live)</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th>Aadhaar Doc</th>
+                        <th>Mukhia Ka Naam</th>
+                        <th>Aadhaar No.</th>
+                        <th>Sadasya</th>
+                        <th>State</th>
+                        <th>District</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let entryCount = 0;
+    const uploadedHeadPhotos = [];
+    const uploadedAadhaarPhotos = [];
+
+    const REQUIRED_AGENT_ID = "Rajat@1234";
+    const validAadhaarList = ["987654321012", "112233445566"];
+    const DEMO_OTP = "1234";
+
+    const stateDistrictData = {
+        "Rajasthan": ["Ajmer", "Alwar", "Bikaner", "Jaipur", "Jodhpur", "Kota", "Udaipur"],
+        "Uttar Pradesh": ["Agra", "Aligarh", "Ayodhya", "Kanpur", "Lucknow", "Varanasi"],
+        "Delhi (UT)": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "South Delhi"],
+        "Bihar": ["Gaya", "Muzaffarpur", "Patna", "Purnia"],
+        "Madhya Pradesh": ["Bhopal", "Gwalior", "Indore", "Jabalpur"],
+        "Gujarat": ["Ahmedabad", "Gandhinagar", "Rajkot", "Surat", "Vadodara"],
+        "Maharashtra": ["Mumbai", "Nagpur", "Nashik", "Pune"],
+        "Punjab": ["Amritsar", "Jalandhar", "Ludhiana", "Patiala"]
+    };
+
+    window.onload = function() {
+        const stateSelect = document.getElementById('stateSelect');
+        Object.keys(stateDistrictData).forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+    };
+
+    function requestOTP() {
+        const agentId = document.getElementById('agentId').value.trim();
+        const aadhaar = document.getElementById('identityInput').value.trim();
+        const mobile = document.getElementById('mobileInput').value.trim();
+        
+        const agentIdError = document.getElementById('agentIdError');
+        const errorDiv = document.getElementById('aadhaarError');
+        const mobileError = document.getElementById('mobileError');
+
+        let isValid = true;
+
+        if (agentId !== REQUIRED_AGENT_ID) {
+            agentIdError.style.display = "block";
+            isValid = false;
+        } else {
+            agentIdError.style.display = "none";
+        }
+
+        if (!validAadhaarList.includes(aadhaar)) {
+            errorDiv.style.display = "block";
+            errorDiv.innerText = "Demo Aadhaar ID chunein (e.g. 987654321012)";
+            isValid = false;
+        } else {
+            errorDiv.style.display = "none";
+        }
+
+        if (mobile.length !== 10 || isNaN(mobile)) {
+            mobileError.style.display = "block";
+            isValid = false;
+        } else {
+            mobileError.style.display = "none";
+        }
+
+        if (isValid) {
+            document.getElementById('otpSection').classList.remove('hidden');
+            document.getElementById('sendOtpBtn').classList.add('hidden');
+            alert('OTP bhej diya gaya hai. Demo OTP: 1234');
+        }
+    }
+
+    function verifyOTP() {
+        const userOtp = document.getElementById('otpInput').value.trim();
+        const otpError = document.getElementById('otpError');
+
+        if (userOtp === DEMO_OTP) {
+            alert('OTP Verified Successfully!');
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('censusFormCard').classList.remove('hidden');
+            document.getElementById('dataListCard').classList.remove('hidden');
+        } else {
+            otpError.style.display = "block";
+        }
+    }
+
+    function updateDistricts() {
+        const stateSelect = document.getElementById('stateSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const selectedState = stateSelect.value;
+
+        districtSelect.innerHTML = '<option value="">District Chunein</option>';
+
+        if (selectedState && stateDistrictData[selectedState]) {
+            stateDistrictData[selectedState].forEach(district => {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+        }
+    }
+
+    function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function submitCensusData(event) {
+        event.preventDefault();
+        
+        const headPhotoFile = document.getElementById('headPhoto').files[0];
+        const aadhaarPhotoFile = document.getElementById('aadhaarPhoto').files[0];
+
+        if (!headPhotoFile || !aadhaarPhotoFile) {
+            alert("Kripya dono photos upload karein!");
+            return;
+        }
+
+        try {
+            const headPhotoDataUrl = await readFileAsDataURL(headPhotoFile);
+            const aadhaarPhotoDataUrl = await readFileAsDataURL(aadhaarPhotoFile);
+
+            if (uploadedHeadPhotos.includes(headPhotoDataUrl) || uploadedAadhaarPhotos.includes(aadhaarPhotoDataUrl)) {
+                alert("Yeh photo pehle se kisi record me uploaded hai!");
+                return;
+            }
+
+            uploadedHeadPhotos.push(headPhotoDataUrl);
+            uploadedAadhaarPhotos.push(aadhaarPhotoDataUrl);
+
+            entryCount++;
+
+            const name = document.getElementById('headName').value;
+            const memberAadhaar = document.getElementById('memberAadhaar').value;
+            const members = document.getElementById('memberCount').value;
+            const state = document.getElementById('stateSelect').value;
+            const district = document.getElementById('districtSelect').value;
+
+            const tbody = document.getElementById('dataTableBody');
+            const newRow = `<tr>
+                <td>${entryCount}</td>
+                <td><img src="${headPhotoDataUrl}" class="user-photo"></td>
+                <td><img src="${aadhaarPhotoDataUrl}" class="doc-photo"></td>
+                <td>${name}</td>
+                <td>${memberAadhaar}</td>
+                <td>${members}</td>
+                <td>${state}</td>
+                <td>${district}</td>
+            </tr>`;
+            
+            tbody.innerHTML += newRow;
+            document.getElementById('censusForm').reset();
+            alert('Data Safaltapoorvak Save Ho Gaya!');
+        } catch (err) {
+            alert("Photo process karne me error aaya!");
+        }
+    }
+</script>
+
+</body>
+</html>
